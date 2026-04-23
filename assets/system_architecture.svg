@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+  <style>
+    .title { font: 700 28px Arial, sans-serif; fill: #1b4332; }
+    .label { font: 600 20px Arial, sans-serif; fill: #1d3557; }
+    .body { font: 16px Arial, sans-serif; fill: #333333; }
+    .small { font: 14px Arial, sans-serif; fill: #555555; }
+    .box { fill: #f1faee; stroke: #457b9d; stroke-width: 3; rx: 20; ry: 20; }
+    .accent { fill: #fff3bf; stroke: #bc6c25; stroke-width: 3; rx: 20; ry: 20; }
+    .arrow { stroke: #1d3557; stroke-width: 4; fill: none; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1d3557" />
+    </marker>
+  </defs>
+
+  <text x="40" y="50" class="title">Speech Therapy Image Coach Architecture</text>
+
+  <rect x="40" y="100" width="250" height="120" class="box" />
+  <text x="65" y="145" class="label">Curated Prompt Store</text>
+  <text x="65" y="178" class="body">Target word</text>
+  <text x="65" y="205" class="body">Synonyms, hint, difficulty</text>
+
+  <rect x="420" y="100" width="250" height="120" class="box" />
+  <text x="445" y="145" class="label">Unsplash Layer</text>
+  <text x="445" y="178" class="body">Live image fetch</text>
+  <text x="445" y="205" class="body">Fallback image source</text>
+
+  <rect x="800" y="100" width="250" height="120" class="box" />
+  <text x="830" y="145" class="label">Streamlit UI</text>
+  <text x="830" y="178" class="body">Image prompt</text>
+  <text x="830" y="205" class="body">Naming + blank forms</text>
+
+  <rect x="160" y="320" width="300" height="160" class="accent" />
+  <text x="195" y="365" class="label">Agentic Evaluation Flow</text>
+  <text x="195" y="400" class="body">1. Validate answer locally</text>
+  <text x="195" y="430" class="body">2. Optional model feedback</text>
+  <text x="195" y="460" class="body">3. Guardrail override if needed</text>
+
+  <rect x="620" y="320" width="300" height="160" class="accent" />
+  <text x="655" y="365" class="label">Sentence Support Flow</text>
+  <text x="655" y="400" class="body">Generate practice sentence</text>
+  <text x="655" y="430" class="body">Create fill-in-the-blank</text>
+  <text x="655" y="460" class="body">Check learner response</text>
+
+  <rect x="360" y="540" width="360" height="70" class="box" />
+  <text x="395" y="582" class="label">Reliability Layer: tests, evaluation.py, debug logs</text>
+
+  <path d="M290 160 L420 160" class="arrow" />
+  <path d="M670 160 L800 160" class="arrow" />
+  <path d="M925 220 L925 300 L770 300 L770 320" class="arrow" />
+  <path d="M800 220 L800 280 L310 280 L310 320" class="arrow" />
+  <path d="M460 400 L620 400" class="arrow" />
+  <path d="M540 480 L540 540" class="arrow" />
+
+  <text x="780" y="620" class="small">Human learner reviews feedback and decides whether to retry or continue.</text>
+</svg>
