@@ -14,6 +14,7 @@ The base project was `ai110-module1show-gameglitchinvestigator-starter`, a Strea
 - Deterministic local validation for correctness checks
 - Deterministic fallback when the model or Unsplash API is unavailable
 - Guardrail logic that can override malformed or conflicting model classifications
+- Confidence parsing guardrail that falls back safely when a model returns non-numeric confidence text
 
 ## Reliability Summary
 

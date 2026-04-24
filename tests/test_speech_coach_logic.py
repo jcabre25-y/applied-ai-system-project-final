@@ -9,7 +9,7 @@ from logic_utils import (
     update_score,
 )
 from prompt_data import PROMPTS
-from llm_client import describe_image_prompt
+from llm_client import _safe_confidence, describe_image_prompt
 
 
 def get_prompt(prompt_id: str):
@@ -78,3 +78,7 @@ def test_describe_image_prompt_prefers_unsplash_metadata():
     description, source = describe_image_prompt(prompt, {"image_description": "A red apple on a table."})
     assert description == "A red apple on a table."
     assert source == "unsplash-metadata"
+
+
+def test_safe_confidence_falls_back_when_model_returns_text():
+    assert _safe_confidence("high", 0.62) == 0.62

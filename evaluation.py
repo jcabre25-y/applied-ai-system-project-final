@@ -1,4 +1,4 @@
-from llm_client import evaluate_with_guardrails, generate_sentence_activity
+from llm_client import evaluate_with_guardrails, generate_sentence_activity, get_last_llm_status
 from logic_utils import evaluate_blank_response
 from prompt_data import PROMPTS
 
@@ -41,6 +41,7 @@ def run_evaluation():
                 "blank_status": blank_feedback["match_status"],
                 "naming_source": naming_source,
                 "sentence_source": sentence_source,
+                "llm_status": get_last_llm_status(),
                 "passed": case_passed,
             }
         )
@@ -51,6 +52,7 @@ def run_evaluation():
             f"- {result['label']}: naming={result['naming_status']} "
             f"blank={result['blank_status']} "
             f"sources=({result['naming_source']}, {result['sentence_source']}) "
+            f"llm_status={result['llm_status']} "
             f"passed={result['passed']}"
         )
 

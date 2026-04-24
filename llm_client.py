@@ -10,6 +10,23 @@ from dotenv import load_dotenv
 from logic_utils import build_fallback_sentence, create_blank_activity, evaluate_naming_response
 
 load_dotenv()
+LAST_LLM_STATUS = "not_called"
+
+
+def _safe_confidence(raw_value: object, fallback_value: float) -> float:
+    try:
+        return float(raw_value)
+    except (TypeError, ValueError):
+        return float(fallback_value)
+
+
+def get_last_llm_status() -> str:
+    return LAST_LLM_STATUS
+
+
+def _set_last_llm_status(status: str) -> None:
+    global LAST_LLM_STATUS
+    LAST_LLM_STATUS = status
 
 
 def get_unsplash_image(prompt_record: Dict[str, str]) -> Dict[str, str]:
@@ -65,6 +82,7 @@ def _post_chat_completion(system_prompt: str, user_prompt: str) -> Dict[str, obj
     if provider in {"auto", "openai"}:
         return _post_openai_completion(system_prompt, user_prompt)
 
+    _set_last_llm_status("no_provider_or_key")
     return None
 
 
@@ -73,6 +91,7 @@ def _post_openai_completion(system_prompt: str, user_prompt: str) -> Dict[str, o
     model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
     if not api_key:
+        _set_last_llm_status("openai_missing_key")
         return None
 
     body = {
@@ -98,13 +117,17 @@ def _post_openai_completion(system_prompt: str, user_prompt: str) -> Dict[str, o
     try:
         with request.urlopen(req, timeout=20) as response:
             payload = json.loads(response.read().decode("utf-8"))
-    except (error.URLError, TimeoutError, json.JSONDecodeError):
+    except (error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+        _set_last_llm_status(f"openai_request_failed:{type(exc).__name__}")
         return None
 
     try:
         content = payload["choices"][0]["message"]["content"]
-        return json.loads(content)
-    except (KeyError, IndexError, TypeError, json.JSONDecodeError):
+        parsed = json.loads(content)
+        _set_last_llm_status("openai_success")
+        return parsed
+    except (KeyError, IndexError, TypeError, json.JSONDecodeError) as exc:
+        _set_last_llm_status(f"openai_parse_failed:{type(exc).__name__}")
         return None
 
 
@@ -113,6 +136,7 @@ def _post_gemini_completion(system_prompt: str, user_prompt: str) -> Dict[str, o
     model = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 
     if not api_key:
+        _set_last_llm_status("gemini_missing_key")
         return None
 
     body = {
@@ -145,13 +169,17 @@ def _post_gemini_completion(system_prompt: str, user_prompt: str) -> Dict[str, o
     try:
         with request.urlopen(req, timeout=20) as response:
             payload = json.loads(response.read().decode("utf-8"))
-    except (error.URLError, TimeoutError, json.JSONDecodeError):
+    except (error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+        _set_last_llm_status(f"gemini_request_failed:{type(exc).__name__}")
         return None
 
     try:
         content = payload["candidates"][0]["content"]["parts"][0]["text"]
-        return json.loads(content)
-    except (KeyError, IndexError, TypeError, json.JSONDecodeError):
+        parsed = json.loads(content)
+        _set_last_llm_status("gemini_success")
+        return parsed
+    except (KeyError, IndexError, TypeError, json.JSONDecodeError) as exc:
+        _set_last_llm_status(f"gemini_parse_failed:{type(exc).__name__}")
         return None
 
 
@@ -176,7 +204,10 @@ def evaluate_with_guardrails(user_response: str, prompt_record: Dict[str, str]) 
 
     normalized = {
         "match_status": model_result.get("match_status", deterministic["match_status"]),
-        "confidence": float(model_result.get("confidence", deterministic["confidence"])),
+        "confidence": _safe_confidence(
+            model_result.get("confidence", deterministic["confidence"]),
+            float(deterministic["confidence"]),
+        ),
         "feedback": str(model_result.get("feedback", deterministic["feedback"])),
         "next_step": str(model_result.get("next_step", deterministic["next_step"])),
     }

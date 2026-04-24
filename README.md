@@ -6,6 +6,9 @@ This project extends my original Module 1-3 base project, `ai110-module1show-gam
 
 Speech Therapy Image Coach helps a learner practice naming common objects from images and then reinforces the word with a fill-in-the-blank sentence activity. The app uses curated therapy-friendly prompts, live Unsplash image support, structured AI feedback, and deterministic guardrails so the system still works when an API key is unavailable.
 
+![Main application UI](assets/main_app_ui.png)
+Caption: Main app screen showing the image prompt, prompt details, naming input, and session sidebar.
+
 ## Architecture Overview
 
 The app follows a small multi-step AI workflow:
@@ -68,6 +71,9 @@ python3 evaluation.py
 
 ## Sample Interactions
 
+![Sample interaction and progress state](assets/sample_interactions.png)
+Caption: Example interaction showing the session sidebar after a completed round.
+
 ### Example 1
 - Image prompt: apple
 - User response: `apple`
@@ -102,10 +108,15 @@ python3 evaluation.py
 - `pytest` covers answer matching, blank-sentence generation, scoring, difficulty adjustment, and fallback sentence behavior.
 - `evaluation.py` runs a small predefined reliability harness across exact matches, synonym cases, and incorrect responses.
 - The app also logs prompt ids, result status, and model vs fallback sources inside the debug panel so it is easier to inspect failures.
+- If the model returns malformed structured fields, such as a text confidence label instead of a numeric value, the app falls back to deterministic values instead of crashing.
+
+![Debug panel with model sources](assets/debug.png)
+Caption: Reliability and debug log showing that the image came from Unsplash and the naming/sentence steps used the model path.
 
 ## What Worked And What Did Not
 
 - The deterministic guardrails kept the project stable and helped prevent the model from returning unusable labels.
+- One important guardrail is the confidence fallback: if a model returns a value like `"high"` instead of `0.85`, the app now uses the deterministic confidence score safely.
 - The image prompt plus sentence-support flow makes the app feel more helpful than a single-answer checker.
 - A limitation is that typed text stands in for spoken therapy interaction, so it does not measure pronunciation or articulation directly.
 
