@@ -126,6 +126,12 @@ This project taught me that a useful AI system is not just about calling a model
 
 ## Loom Walkthrough
 
-Add your Loom walkthrough link here before submission:
+<div>
+    <a href="https://www.loom.com/share/d01124195f684860805798821234b0e6">
+      <p>Speech Therapy Image Coach with Agentic AI 🎥 - Watch Video</p>
+    </a>
+    <a href="https://www.loom.com/share/d01124195f684860805798821234b0e6">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/d01124195f684860805798821234b0e6-9deda38d0cbb7322-full-play.gif#t=0.1">
+    </a>
+  </div>
 
-`<div style="position: relative; padding-bottom: 62.5%; height: 0;"><iframe src="https://www.loom.com/embed/d01124195f684860805798821234b0e6" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>`
